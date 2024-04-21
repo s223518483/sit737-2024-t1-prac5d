@@ -1,0 +1,43 @@
+version: "3.8"
+
+networks:
+  sit737_network:
+    name: sit737_network
+    driver: bridge
+
+services:
+  webapp:
+    environment:
+      - PORT=3041
+    expose:
+      - "3041"
+    ports:
+      - "3041:3041"
+    image: s223518483/nodeapp:1.1
+    container_name: nodeapp
+    networks:
+      - sit737_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3041"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+    restart: on-failure
+
+  webapp_GCP:
+    environment:
+      - PORT=3042
+    expose:
+      - "3042"
+    ports:
+      - "3042:3042"
+    image: australia-southeast2-docker.pkg.dev/sit737-24t1-nguyen-b5add00/s223518483/nodeapp:1.1
+    container_name: nodeapp_gcp
+    networks:
+      - sit737_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3042"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+    restart: on-failure
